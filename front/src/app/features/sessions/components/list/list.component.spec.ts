@@ -37,6 +37,7 @@ describe('ListComponent', () => {
 
   it('should get user', () => {
     expect(component.user).toBeDefined();
+    expect(component.user).toEqual(mockSessionService.sessionInformation);
   });
 
 
