@@ -24,10 +24,7 @@ describe('DetailComponent', () => {
   let mockSessionService = {
     sessionInformation: {
       admin: true,
-      id: 1,
-      username: '',
-      firstName: '',
-      lastName: ''
+      id: 1
     }
   };
   let mockActivatedRoute = {
