@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SessionService } from 'src/app/services/session.service';
+import { expect } from '@jest/globals';
 
 import { MeComponent } from './me.component';
 
@@ -13,12 +14,13 @@ describe('MeComponent', () => {
   let component: MeComponent;
   let fixture: ComponentFixture<MeComponent>;
 
-  const mockSessionService = {
+  let mockSessionService: { sessionInformation: { admin: boolean; id: number } };
+  mockSessionService = {
     sessionInformation: {
       admin: true,
       id: 1
     }
-  }
+  };
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MeComponent],
@@ -40,8 +42,16 @@ describe('MeComponent', () => {
   });
 
   it('should create', () => {
-    // @ts-ignore
     expect(component).toBeTruthy();
   });
 
+  it('should user id equal 1', () => {
+    console.log(component)
+    expect(component.user?.id).not.toBeDefined();
+  });
+
+  /*it('should  delete', () => {
+    component.delete()
+    expect(component.).
+  });*/
 });
