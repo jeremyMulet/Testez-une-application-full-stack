@@ -11,11 +11,12 @@ describe('ListComponent', () => {
   let component: ListComponent;
   let fixture: ComponentFixture<ListComponent>;
 
-  const mockSessionService = {
+  let mockSessionService: { sessionInformation: { admin: boolean } };
+  mockSessionService = {
     sessionInformation: {
       admin: true
     }
-  }
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -33,4 +34,11 @@ describe('ListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should get user', () => {
+    expect(component.user).toBeDefined();
+    expect(component.user).toEqual(mockSessionService.sessionInformation);
+  });
+
+
 });

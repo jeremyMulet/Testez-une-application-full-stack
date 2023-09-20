@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "jest"
+      "jest", "@testing-library/jest-dom"
     ],
     "module": "commonjs",
     "emitDecoratorMetadata": true,
