@@ -45,13 +45,10 @@ describe('MeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should user id equal 1', () => {
-    console.log(component)
-    expect(component.user?.id).not.toBeDefined();
+  it('should go back on history', () => {
+    const spyWindow = jest.spyOn(window.history, 'back')
+    component.back();
+    expect(spyWindow).toHaveBeenCalled();
   });
 
-  /*it('should  delete', () => {
-    component.delete()
-    expect(component.).
-  });*/
 });
