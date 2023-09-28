@@ -9,6 +9,7 @@ import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 /**
  * Created by Jérémy MULET on 24/09/2023.
  */
-@SpringBootTest
+
 @ExtendWith(MockitoExtension.class)
 public class SessionServicesTests {
 
@@ -32,6 +33,7 @@ public class SessionServicesTests {
     @Mock
     private UserRepository userRepository;
 
+    @InjectMocks
     private SessionService sessionService;
 
     private Session mockSession;
@@ -47,7 +49,6 @@ public class SessionServicesTests {
     }
     @BeforeEach
     public void setUp() {
-        sessionService = new SessionService(sessionRepository, userRepository);
         mockSession = Session.builder()
                 .name("session")
                 .id(1L)
