@@ -40,7 +40,8 @@ public class UserServiceTest {
 
         User foundUser = userService.findById(1L);
 
-        assertThat(foundUser).isNotNull().isEqualToComparingFieldByField(user);
+        assertThat(foundUser).isNotNull().isEqualTo(user);
+        verify(userRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -50,6 +51,7 @@ public class UserServiceTest {
         User foundUser = userService.findById(1L);
 
         assertThat(foundUser).isNull();
+        verify(userRepository, times(1)).findById(1L);
     }
 
     @Test

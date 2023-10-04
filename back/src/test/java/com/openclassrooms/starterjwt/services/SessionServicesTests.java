@@ -87,6 +87,7 @@ public class SessionServicesTests {
         List<Session> result = sessionService.findAll();
 
         assertThat(result).isNotEmpty().isEqualTo(sessions);
+        verify(sessionRepository, times(1)).findAll();
     }
 
     @Test
@@ -96,6 +97,7 @@ public class SessionServicesTests {
         Session result = sessionService.getById(1L);
 
         assertThat(result).isNotNull().isEqualTo(mockSession);
+        verify(sessionRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -105,6 +107,7 @@ public class SessionServicesTests {
         Session result = sessionService.getById(1L);
 
         assertThat(result).isNull();
+        verify(sessionRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -114,6 +117,7 @@ public class SessionServicesTests {
         Session result = sessionService.update(1L, mockSession);
 
         assertThat(result).isNotNull().isEqualTo(mockSession);
+        verify(sessionRepository, times(1)).save(any(Session.class));
     }
 
     @Test
@@ -124,15 +128,16 @@ public class SessionServicesTests {
         sessionService.participate(1L, 1L);
 
         assertThat(mockSession.getUsers()).contains(mockUser);
+        verify(sessionRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).findById(1L);
     }
 
     @Test
     public void participate_ShouldThrowNotFoundExceptionWhenSessionOrUserNotFound() {
         when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> {
-            sessionService.participate(1L, 1L);
-        });
+        assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> sessionService.participate(1L, 1L));
+        verify(sessionRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -142,9 +147,9 @@ public class SessionServicesTests {
         when(sessionRepository.findById(1L)).thenReturn(Optional.of(mockSession));
         when(userRepository.findById(2L)).thenReturn(Optional.of(mockUser));
 
-        assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> {
-            sessionService.participate(1L, 2L);
-        });
+        assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> sessionService.participate(1L, 2L));
+        verify(sessionRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).findById(2L);
     }
 
     @Test
@@ -156,6 +161,7 @@ public class SessionServicesTests {
         sessionService.noLongerParticipate(1L, 2L);
 
         assertThat(mockSession.getUsers()).doesNotContain(mockUser);
+        verify(sessionRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -167,5 +173,6 @@ public class SessionServicesTests {
 
         assertThatThrownBy(() -> sessionService.participate(sessionId, userId))
                 .isInstanceOf(NotFoundException.class);
+        verify(sessionRepository, times(1)).findById(sessionId);
     }
 }

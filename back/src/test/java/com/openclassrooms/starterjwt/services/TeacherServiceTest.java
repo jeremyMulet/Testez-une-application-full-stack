@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Jérémy MULET on 28/09/2023.
@@ -48,8 +48,8 @@ public class TeacherServiceTest {
 
         List<Teacher> teachers = teacherService.findAll();
 
-        assertThat(teachers).hasSize(2)
-                .contains(teacher1, teacher2);
+        assertThat(teachers).hasSize(2).contains(teacher1, teacher2);
+        verify(teacherRepository, times(1)).findAll();
     }
 
     @Test
@@ -62,6 +62,7 @@ public class TeacherServiceTest {
         Teacher foundTeacher = teacherService.findById(1L);
 
         assertThat(foundTeacher).isNotNull().isEqualToComparingFieldByField(teacher);
+        verify(teacherRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -71,6 +72,7 @@ public class TeacherServiceTest {
         Teacher foundTeacher = teacherService.findById(1L);
 
         assertThat(foundTeacher).isNull();
+        verify(teacherRepository, times(1)).findById(1L);
     }
 }
 
