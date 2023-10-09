@@ -2,42 +2,20 @@ package com.openclassrooms.starterjwt.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.dto.SessionDto;
-import com.openclassrooms.starterjwt.mapper.SessionMapper;
-import com.openclassrooms.starterjwt.models.Session;
-import com.openclassrooms.starterjwt.models.Teacher;
-import com.openclassrooms.starterjwt.models.User;
-import com.openclassrooms.starterjwt.repository.SessionRepository;
-import com.openclassrooms.starterjwt.security.services.UserDetailsServiceImpl;
-import com.openclassrooms.starterjwt.services.SessionService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Jérémy MULET on 28/09/2023.
@@ -51,28 +29,6 @@ public class SessionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    private final Teacher teacher = Teacher.builder()
-            .id(2L)
-            .firstName("Teacher")
-            .lastName("Teacher")
-            .build();
-    private Session session;
-
-    private final User user = User.builder()
-            .id(1L)
-            .email("toto@mail.com")
-            .lastName("TOTO")
-            .firstName("Toto")
-            .password("toto")
-            .admin(false)
-            .build();
-
-    @BeforeEach
-    public void setup() {
-        LocalDateTime date = LocalDateTime.now();
-        session = new Session(3L, "session", new Date(), "Test", teacher, Arrays.asList(user, user), date, date);
-    }
 
     @Test
     void shouldFindById() throws Exception {
@@ -141,19 +97,94 @@ public class SessionControllerTest {
     }
 
     @Test
-    void testDelete() throws Exception {
+    void testUpdate_shouldReturnBadRequest() throws Exception {
         SessionDto sessionDto = new SessionDto();
         sessionDto.setName("update name");
         sessionDto.setDescription("Test description");
         sessionDto.setDate(new Date());
         sessionDto.setTeacher_id(1L);
 
-        mockMvc.perform(delete("/api/session/{id}", 1)
+        mockMvc.perform(put("/api/session/toto", 1)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(sessionDto)))
                 .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testSave() throws Exception {
+
+        mockMvc.perform(delete("/api/session/{id}", 1)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testSave_shouldReturnBadRequest() throws Exception {
+
+        mockMvc.perform(delete("/api/session/toto", 1)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testSave_shouldReturnNotFound() throws Exception {
+
+        mockMvc.perform(delete("/api/session/{id}", -1)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testParticipate() throws Exception {
+        mockMvc.perform(post("/api/session/2/participate/2")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testParticipate_shouldReturnBadRequest() throws Exception {
+        mockMvc.perform(post("/api/session/1/participate/a")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testParticipate_shouldReturnNotFound() throws Exception {
+        mockMvc.perform(post("/api/session/1/participate/40")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testNolongerParticipate() throws Exception {
+        mockMvc.perform(delete("/api/session/1/participate/2")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testNolongerParticipate_shouldReturnBadRequest() throws Exception {
+        mockMvc.perform(delete("/api/session/2/participate/a")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
 

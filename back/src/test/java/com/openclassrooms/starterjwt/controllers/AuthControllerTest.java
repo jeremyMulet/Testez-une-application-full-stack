@@ -58,7 +58,7 @@ public class AuthControllerTest {
     public void testRegisterUserEmailAlreadyExist() throws Exception {
 
         SignupRequest signUpRequest = new SignupRequest();
-        signUpRequest.setEmail("yoga@studio.com");
+        signUpRequest.setEmail("toto@toto.com");
         signUpRequest.setFirstName("toto");
         signUpRequest.setLastName("tutu");
         signUpRequest.setPassword("toto123");
