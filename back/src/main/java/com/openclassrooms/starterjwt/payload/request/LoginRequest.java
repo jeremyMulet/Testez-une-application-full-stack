@@ -1,15 +1,17 @@
 package com.openclassrooms.starterjwt.payload.request;
 
-import javax.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+@RequiredArgsConstructor
 public class LoginRequest {
 	@NotBlank
-  private String email;
+    private String email;
 
 	@NotBlank
 	private String password;
 
-	public String getEmail() {
+    public String getEmail() {
 		return email;
 	}
 
@@ -24,4 +26,9 @@ public class LoginRequest {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+    public LoginRequest(String mail, String password) {
+        setEmail(mail);
+        setPassword(password);
+    }
 }
