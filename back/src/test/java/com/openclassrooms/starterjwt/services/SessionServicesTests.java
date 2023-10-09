@@ -165,6 +165,16 @@ public class SessionServicesTests {
     }
 
     @Test
+    public void noLongerParticipate_ShouldReturnNotFoundException() {
+
+        when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sessionService.noLongerParticipate(1L, 2L))
+                .isInstanceOf(NotFoundException.class);
+        verify(sessionRepository, times(1)).findById(1L);
+    }
+
+    @Test
     public void testParticipate_nonExistentSession() {
         Long sessionId = 1L;
         Long userId = 2L;
