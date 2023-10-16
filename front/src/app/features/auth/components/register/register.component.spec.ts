@@ -106,7 +106,3 @@ describe('RegisterComponent', () => {
     expect(screen.getByText(/an error occurred/i)).toBeInTheDocument();
   });
 });
-
-describe('RegisterComponent', () => {
-
-});
